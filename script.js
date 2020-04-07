@@ -16,38 +16,38 @@ const randomArr = (sizeGame) => {
     return result;
 };
 
-
+function newGame() {
 const randomEe = randomArr(sizeGame);
 const randomOrder = randomArr(sizeGame);
 const pushElement = (el) => {
     const blankPuzzle = el.classList.contains('puz_blank');
     const order = randomOrder.pop();
     const elemNum = randomEe.pop()
+
     if(!blankPuzzle){
         el.innerHTML = `<span>${elemNum}</span>`;
         el.setAttribute('style',`order: ${order}`)
     }
     else {
         el.innerHTML = `<span></span>`;
-        el.setAttribute('style',`order: ${order}`)
+        el.setAttribute('style',`order: ${sizeGame + 1}`)
     }
 };
 
 puzzle.forEach(el => {pushElement(el)});
-
+};
 
 const getOrder = (el) => {
     const orderElString = el.getAttribute('style').toString();
     const elOrder =  parseInt(orderElString.match(/\d+/))
     return elOrder;
 }
-
+newGame()
 
 
 const movePuzzle = (event) => {
     
     const targetElOrder = getOrder(event.target)
-    //console.log('targetElOrder upper', targetElOrder)
     let isMoveble;
     const blankElement = document.querySelector('.puz_blank');
     const blankElOrder = getOrder(blankElement);
@@ -61,7 +61,6 @@ const movePuzzle = (event) => {
     const upSibling =  blankElOrder + 4;
     const downSibling =  blankElOrder - 4;
     const siblings = [leftSibling, rightSibling, upSibling, downSibling];
-    //console.log(siblings)
     if(siblings.includes(targetElOrder)) {
         isMoveble = true;
         
@@ -69,16 +68,15 @@ const movePuzzle = (event) => {
         
     
     if(isMoveble) {
-        //console.log('targetElOrder ', targetElOrder)
-        //console.log('moveToIndex ', moveToIndex)
         elemClick.setAttribute('style', `order: ${moveToIndex}`)
         blankElement.setAttribute('style', `order: ${targetElOrder}`)
-       
     }
     //puzzle.forEach(el => blankSibling(el))
     
 }
 
+const buttonNewGame = document.querySelector('#new_game');
 
+buttonNewGame.addEventListener('click', newGame)
 
 puzzle.forEach(el => el.addEventListener('click', movePuzzle))

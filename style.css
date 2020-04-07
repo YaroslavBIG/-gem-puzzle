@@ -1,3 +1,14 @@
+h1 {
+    text-align: center;
+}
+
+.control {
+    padding: 7px 0;
+    display: flex;
+    justify-content: center;
+    background-color: bisque;
+}
+
 .contener {
     background-color: bisque;
     display: grid;
@@ -8,6 +19,7 @@
     justify-content: center;
 }
 .puz {
+    display: flex;
     background-color: cadetblue;
     width: inherit;
     height: inherit;
@@ -17,3 +29,9 @@
 .puz_blank {
     background-color: bisque;
 }
+
+span {
+    margin: auto;
+    font-size: 30px;
+}
+
