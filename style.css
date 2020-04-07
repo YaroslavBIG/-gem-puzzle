@@ -1,0 +1,11 @@
+.contener {
+    background-color: bisque;
+    display: grid;
+    grid-template-columns: 122px 122px 122px 122px;
+    grid-template-rows: 122px 122px 122px 122px;
+}
+.puz {
+    background-color: cadetblue;
+    width: inherit;
+    height: inherit;
+}
