@@ -1,11 +1,19 @@
 .contener {
     background-color: bisque;
     display: grid;
-    grid-template-columns: 122px 122px 122px 122px;
-    grid-template-rows: 122px 122px 122px 122px;
+    grid-template-columns: repeat(4, 120px);
+    grid-template-rows: repeat(4, 120px);
+    grid-gap: 5px;
+    grid-auto-flow: row;
+    justify-content: center;
 }
 .puz {
     background-color: cadetblue;
     width: inherit;
     height: inherit;
+    border: 2px solid black;
+}
+
+.puz_blank {
+    background-color: bisque;
 }
