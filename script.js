@@ -1,6 +1,7 @@
 const sizeGame = 15;
 const puzzle = document.querySelectorAll('.puz');
 const buttonNewGame = document.querySelector('#new_game');
+let movesCount = 0;
 
 function randomInteger(min, max) {
     // случайное число от min до (max+1)
@@ -52,16 +53,17 @@ buttonNewGame.addEventListener('click', (event) => {
 })
 
 function newGame() {
+movesCount = 0;
+movesCounter()
 const randomEe = randomArr(sizeGame);
 const randomOrder = randomArr(sizeGame);
+
 const pushElement = (el) => {
-    const blankPuzzle = el.classList.contains('puz_blank');
-    
-    
-    if(blankPuzzle){
-        el.innerHTML = `<span></span>`;
-        el.setAttribute('style',`order: 16`)
-    }else{
+const blankPuzzle = el.classList.contains('puz_blank');
+if(blankPuzzle){
+    el.innerHTML = `<span></span>`;
+    el.setAttribute('style',`order: 16`)
+}else{
     const order = randomOrder.pop();
     const elemNum = randomEe.pop()
     el.innerHTML = `<span>${elemNum}</span>`;
@@ -73,13 +75,16 @@ puzzle.forEach(el => {pushElement(el)});
 };
 
 const getOrder = (el) => {
-    console.log(el)
     const orderElString = el.getAttribute('style').toString();
     const elOrder =  parseInt(orderElString.match(/\d+/))
     return elOrder;
 }
 newGame()
 
+function movesCounter() {
+    const counter = document.querySelector('#moves_count');
+    counter.innerText = movesCount;
+}
 
 const movePuzzle = (event) => {
     const targetElOrder = getOrder(event.target) ? getOrder(event.target) : getOrder(event.target.parentElement)
@@ -104,10 +109,23 @@ const movePuzzle = (event) => {
         
     
     if(isMoveble) {
-        elemClick.setAttribute('style', `order: ${moveToIndex}`)
-        blankElement.setAttribute('style', `order: ${targetElOrder}`)
+        elemClick.setAttribute('style', `order: ${moveToIndex}`);
+        blankElement.setAttribute('style', `order: ${targetElOrder}`);
+        movesCount +=1;
+        movesCounter();
     }
-    //puzzle.forEach(el => blankSibling(el))
+    
+    puzzle.forEach(el => {
+        const elPos = getOrder(el);
+        const elNum = parseInt(el.textContent)
+        if(elPos === elNum) {
+            el.classList.add('puz--bordered');
+        }
+        if(elPos !== elNum) {
+            el.classList.remove('puz--bordered');
+        }
+    });
+
     
 }
 
