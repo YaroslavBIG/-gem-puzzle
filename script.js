@@ -1,6 +1,7 @@
 const sizeGame = 15;
 const puzzle = document.querySelectorAll('.puz');
 const buttonNewGame = document.querySelector('#new_game');
+let youWin = 0;
 let movesCount = 0;
 
 function randomInteger(min, max) {
@@ -73,10 +74,11 @@ puzzle.forEach(el => {pushElement(el)});
 
 const getOrder = (el) => {
     const orderElString = el.getAttribute('style').toString();
-    const elOrder =  parseInt(orderElString.match(/\d+/))
+    const elOrder =  parseInt(orderElString.match(/\d+/));
     return elOrder;
 }
 newGame()
+
 
 function movesCounter() {
     const counter = document.querySelector('#moves_count');
@@ -84,13 +86,15 @@ function movesCounter() {
 }
 
 const movePuzzle = (event) => {
-    const targetElOrder = getOrder(event.target) ? getOrder(event.target) : getOrder(event.target.parentElement)
+    const elem = event.target;
+    const testPuz = elem.childElementCount > 0;
+    const targetElOrder = testPuz ? getOrder(elem) : getOrder(elem.parentElement);
 
     let isMoveble;
     const blankElement = document.querySelector('.puz_blank');
     const blankElOrder = getOrder(blankElement);
-    let moveToIndex = blankElOrder;
-    const elemClick = event.target;
+    const moveToIndex = blankElOrder;
+    const elemClick = testPuz ? elem : elem.parentElement;
     
     
     
@@ -114,7 +118,7 @@ const movePuzzle = (event) => {
     
     puzzle.forEach(el => {
         const elPos = getOrder(el);
-        const elNum = parseInt(el.textContent)
+        const elNum = parseInt(el.textContent);
         if(elPos === elNum) {
             el.classList.add('puz--bordered');
         }
@@ -122,8 +126,10 @@ const movePuzzle = (event) => {
             el.classList.remove('puz--bordered');
         }
     });
-
-    
+    youWin = 0;
+    puzzle.forEach(el => {
+        youWin += el.classList.contains('puz--bordered') ? 1 : 0;
+    });
 }
 
 
