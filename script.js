@@ -1,6 +1,7 @@
 const sizeGame = 15;
 const puzzle = document.querySelectorAll('.puz');
 const buttonNewGame = document.querySelector('#new_game');
+const container = document.querySelector('.contener')
 let youWin = 0;
 let movesCount = 0;
 
@@ -39,8 +40,6 @@ function timer() {
 
     document.querySelector("#timer").innerHTML = minute + ":" + second;
 }
-
-const container = document.querySelector('.contener')
 
 const startTimer = () => {
     timerInterval = setInterval(timer, 1000);
@@ -119,8 +118,6 @@ const getOrder = (el) => {
     const elOrder = parseInt(orderElString.match(/\d+/));
     return elOrder;
 }
-
-
 
 function movesCounter() {
     const counter = document.querySelector('#moves_count');
