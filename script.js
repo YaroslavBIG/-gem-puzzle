@@ -5,7 +5,6 @@ let youWin = 0;
 let movesCount = 0;
 
 function randomInteger(min, max) {
-    // случайное число от min до (max+1)
     let rand = min + Math.random() * (max + 1 - min);
     return Math.floor(rand);
 };
@@ -21,23 +20,23 @@ const randomArr = (sizeGame) => {
 
 let timerStarted;
 let totalSeconds = 0;
-     
+
 function timer() {
     ++totalSeconds;
     const second = pad(totalSeconds % 60);
     const minute = pad(parseInt(totalSeconds / 60));
 
-  
-  function pad(num) {
-    const numToString = num + "";
-    if (numToString.length < 2) {
-      return "0" + numToString;
-    } else {
-      return numToString;
+
+    function pad(num) {
+        const numToString = num + "";
+        if (numToString.length < 2) {
+            return "0" + numToString;
+        } else {
+            return numToString;
+        }
     }
-  }
-    
-    document.querySelector("#timer").innerHTML = minute + ":" + second; 
+
+    document.querySelector("#timer").innerHTML = minute + ":" + second;
 }
 
 const container = document.querySelector('.contener')
@@ -48,33 +47,62 @@ const startTimer = () => {
 };
 
 function newGame() {
-movesCount = 0;
-movesCounter()
-timerStarted = false;
-totalSeconds = 0;
-const randomEe = randomArr(sizeGame);
-const randomOrder = randomArr(sizeGame);
-buttonNewGame.removeEventListener('click', startTimer);
-buttonNewGame.addEventListener('click', startTimer);
-const pushElement = (el) => {
-const blankPuzzle = el.classList.contains('puz_blank');
-if(blankPuzzle){
-    el.innerHTML = `<span></span>`;
-    el.setAttribute('style',`order: 16`)
-}else{
-    const order = randomOrder.pop();
-    const elemNum = randomEe.pop()
-    el.innerHTML = `<span>${elemNum}</span>`;
-    el.setAttribute('style',`order: ${order}`)
-    }    
+    movesCount = 0;
+    movesCounter()
+    timerStarted = false;
+    totalSeconds = 0;
+    const randomEe = randomArr(sizeGame);
+    const randomOrder = randomArr(sizeGame);
+    buttonNewGame.removeEventListener('click', startTimer);
+    buttonNewGame.addEventListener('click', startTimer);
+    const pushElement = (el) => {
+        const blankPuzzle = el.classList.contains('puz_blank');
+        if (blankPuzzle) {
+            el.innerHTML = `<span></span>`;
+            el.setAttribute('style', `order: 16`)
+        } else {
+            const order = randomOrder.pop();
+            const elemNum = randomEe.pop()
+            el.innerHTML = `<span>${elemNum}</span>`;
+            el.setAttribute('style', `order: ${order}`)
+        }
+    };
+
+    puzzle.forEach(el => {
+        pushElement(el)
+    });
 };
 
-puzzle.forEach(el => {pushElement(el)});
+function fastGame() {
+    movesCount = 0;
+    movesCounter()
+    timerStarted = false;
+    totalSeconds = 0;
+    const randomEe = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const randomOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    buttonNewGame.removeEventListener('click', startTimer);
+    buttonNewGame.addEventListener('click', startTimer);
+    const pushElement = (el) => {
+        const blankPuzzle = el.classList.contains('puz_blank');
+        if (blankPuzzle) {
+            el.innerHTML = `<span></span>`;
+            el.setAttribute('style', `order: 16`)
+        } else {
+            const order = randomOrder.pop();
+            const elemNum = randomEe.pop()
+            el.innerHTML = `<span>${elemNum}</span>`;
+            el.setAttribute('style', `order: ${order}`)
+        }
+    };
+
+    puzzle.forEach(el => {
+        pushElement(el)
+    });
 };
 
 const getOrder = (el) => {
     const orderElString = el.getAttribute('style').toString();
-    const elOrder =  parseInt(orderElString.match(/\d+/));
+    const elOrder = parseInt(orderElString.match(/\d+/));
     return elOrder;
 }
 newGame()
@@ -95,34 +123,34 @@ const movePuzzle = (event) => {
     const blankElOrder = getOrder(blankElement);
     const moveToIndex = blankElOrder;
     const elemClick = testPuz ? elem : elem.parentElement;
-    
-    
-    
+
+
+
     const leftSibling = blankElOrder - 1;
     const rightSibling = blankElOrder + 1;
-    const upSibling =  blankElOrder + 4;
-    const downSibling =  blankElOrder - 4;
+    const upSibling = blankElOrder + 4;
+    const downSibling = blankElOrder - 4;
     const siblings = [leftSibling, rightSibling, upSibling, downSibling];
-    if(siblings.includes(targetElOrder)) {
+    if (siblings.includes(targetElOrder)) {
         isMoveble = true;
-        
+
     }
-        
-    
-    if(isMoveble) {
+
+
+    if (isMoveble) {
         elemClick.setAttribute('style', `order: ${moveToIndex}`);
         blankElement.setAttribute('style', `order: ${targetElOrder}`);
-        movesCount +=1;
+        movesCount += 1;
         movesCounter();
     }
-    
+
     puzzle.forEach(el => {
         const elPos = getOrder(el);
         const elNum = parseInt(el.textContent);
-        if(elPos === elNum) {
+        if (elPos === elNum) {
             el.classList.add('puz--bordered');
         }
-        if(elPos !== elNum) {
+        if (elPos !== elNum) {
             el.classList.remove('puz--bordered');
         }
     });
@@ -130,6 +158,11 @@ const movePuzzle = (event) => {
     puzzle.forEach(el => {
         youWin += el.classList.contains('puz--bordered') ? 1 : 0;
     });
+
+    if(youWin === 15) {
+        alert(`Ура! Вы решили головоломку за ${document.querySelector('#timer').innerText} и ${movesCount} ходов»`)
+        newGame()
+    }
 }
 
 
@@ -137,4 +170,3 @@ const movePuzzle = (event) => {
 buttonNewGame.addEventListener('click', newGame)
 
 puzzle.forEach(el => el.addEventListener('click', movePuzzle))
-
