@@ -17,47 +17,44 @@ const randomArr = (sizeGame) => {
     }
     return result;
 };
+
 let timerStarted;
-let minute;
-let second;
+let totalSeconds = 0;
+     
+function timer() {
+    ++totalSeconds;
+    const second = pad(totalSeconds % 60);
+    const minute = pad(parseInt(totalSeconds / 60));
 
-function startTimer(timerStarted) {
-    let siteTime = new Date();
-    timerStarted = true
-    if(!timerStarted){
-        minute = siteTime.setMinutes(0); 
-        second = siteTime.setSeconds(0);
+  
+  function pad(num) {
+    const numToString = num + "";
+    if (numToString.length < 2) {
+      return "0" + numToString;
+    } else {
+      return numToString;
     }
-    else{
-        minute = siteTime.getMinutes(); 
-        second = siteTime.getSeconds();
-        
-    }
-
-    if (minute < 10) minute  = "0" + minute;
-    if (second < 10) second  = "0" + second;
+  }
     
     document.querySelector("#timer").innerHTML = minute + ":" + second; 
 }
 
 const container = document.querySelector('.contener')
 
-
-
-buttonNewGame.addEventListener('click', (event) => {
-    if(!timerStarted){
-    setInterval(()=>{
-        startTimer()
-    }, 1000)
-    }
-})
+const startTimer = () => {
+    setInterval(timer, 1000);
+    timerStarted = true;
+};
 
 function newGame() {
 movesCount = 0;
 movesCounter()
+timerStarted = false;
+totalSeconds = 0;
 const randomEe = randomArr(sizeGame);
 const randomOrder = randomArr(sizeGame);
-
+buttonNewGame.removeEventListener('click', startTimer);
+buttonNewGame.addEventListener('click', startTimer);
 const pushElement = (el) => {
 const blankPuzzle = el.classList.contains('puz_blank');
 if(blankPuzzle){
