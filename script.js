@@ -20,6 +20,7 @@ const randomArr = (sizeGame) => {
 
 let timerStarted;
 let totalSeconds = 0;
+let timerInterval;
 
 function timer() {
     ++totalSeconds;
@@ -42,19 +43,30 @@ function timer() {
 const container = document.querySelector('.contener')
 
 const startTimer = () => {
-    setInterval(timer, 1000);
+    timerInterval = setInterval(timer, 1000);
+    totalSeconds = 0
     timerStarted = true;
 };
 
+const stopTimer = () => {
+    clearInterval(timerInterval);
+    totalSeconds = 0
+    timerStarted = false;
+}
+
 function newGame() {
+    stopTimer();
     movesCount = 0;
     movesCounter()
     timerStarted = false;
     totalSeconds = 0;
+    startTimer()
+    puzzle.forEach(el => {
+        el.classList.remove('puz--bordered');
+    });
+
     const randomEe = randomArr(sizeGame);
     const randomOrder = randomArr(sizeGame);
-    buttonNewGame.removeEventListener('click', startTimer);
-    buttonNewGame.addEventListener('click', startTimer);
     const pushElement = (el) => {
         const blankPuzzle = el.classList.contains('puz_blank');
         if (blankPuzzle) {
@@ -71,6 +83,9 @@ function newGame() {
     puzzle.forEach(el => {
         pushElement(el)
     });
+
+    //buttonNewGame.addEventListener('click', startTimer);
+    puzzle.forEach(el => el.addEventListener('click', movePuzzle))
 };
 
 function fastGame() {
@@ -81,7 +96,6 @@ function fastGame() {
     const randomEe = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const randomOrder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     buttonNewGame.removeEventListener('click', startTimer);
-    buttonNewGame.addEventListener('click', startTimer);
     const pushElement = (el) => {
         const blankPuzzle = el.classList.contains('puz_blank');
         if (blankPuzzle) {
@@ -105,7 +119,7 @@ const getOrder = (el) => {
     const elOrder = parseInt(orderElString.match(/\d+/));
     return elOrder;
 }
-newGame()
+
 
 
 function movesCounter() {
@@ -159,14 +173,12 @@ const movePuzzle = (event) => {
         youWin += el.classList.contains('puz--bordered') ? 1 : 0;
     });
 
-    if(youWin === 15) {
+    if (youWin === 15) {
         alert(`Ура! Вы решили головоломку за ${document.querySelector('#timer').innerText} и ${movesCount} ходов»`)
         newGame()
     }
 }
 
-
+window.addEventListener('load', newGame)
 
 buttonNewGame.addEventListener('click', newGame)
-
-puzzle.forEach(el => el.addEventListener('click', movePuzzle))
